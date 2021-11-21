@@ -1,8 +1,9 @@
 import os
-dizionario_path="./rn.txt"
-#dizionario utilizzato che trova la password 
-#https://raw.githubusercontent.com/dwyl/english-words/master/words_alpha.txt
+dizionario_path="./weakpass.txt"
 lettere="qwertyuiopasdfghjklzxcvbnm"
+lettere={i for i in lettere}
+inizio=0
+
 #funzione per caricare tutte le words del dizionario
 def load_dizionario(path):
     d=[]
@@ -10,16 +11,16 @@ def load_dizionario(path):
         for i in f:
             d.append(i.strip())
     print(d)
-    return d
+    return d[inizio:]
 #funzione per decriptare il ciphertext con la password pw
 def attaccoAlDizionario(pw,u):
     #chiamo la funzione di openssl per decriptare con la password pw
     #il cifrario des in cbc, la key derivation function e butto gli output su out.txt
     #e gli errori in err.txt
-    os.system('cmd /c openssl enc -des-cbc -d -pass pass:'+pw+' -pbkdf2 -in outfile.txt.enc > out.txt 2>err.txt')
+    os.system('cmd /c openssl enc -aes-256-cbc -d -pass pass:'+pw+'  -in outfile.txt.enc > o.txt 2>e.txt')
     try:
         #apro il file con la frase decifrata come file binario
-        with open("out.txt","rb") as f:
+        with open("o.txt","rb") as f:
             s=""
             #leggo nella stringa s il file binario convertendolo in utf8
             byte=f.read(1)
@@ -46,7 +47,7 @@ def attaccoAlDizionario(pw,u):
 if __name__ == '__main__':
     #carico il dizionario
     d=load_dizionario(dizionario_path)
-    u=0
+    u=inizio
     #per tutte le parole nel dizionario provo a decriptaree se trovo un match stoppo
     for i in d:
         u+=1
